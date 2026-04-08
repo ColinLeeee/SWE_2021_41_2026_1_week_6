@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# files 폴더가 없으면 종료
+if [ ! -d "files" ]; then
+    echo "files 폴더를 찾을 수 없습니다."
+    exit 1
+fi
+
+for file in files/*; do
+    # 파일인 경우에만 처리 (디렉토리 제외)
+    if [ -f "$file" ]; then
+        # 파일명만 추출 (예: files/Kay.txt -> Kay.txt)
+        filename=$(basename "$file")
+        
+        # 첫 글자 추출 후 소문자로 변환 (K -> k)
+        # ${variable,,} 구문은 Bash 4.0 이상에서 '모두 소문자로' 만드는 아주 빠른 문법입니다.
+        first_char=$(echo "${filename:0:1}" | tr '[:upper:]' '[:lower:]')
+        
+        # 목적지 폴더로 이동 (상대 경로)
+        mv "$file" "./$first_char/"
+    fi
+done
+
